@@ -8,6 +8,5 @@ if(file_exists("./App/Helper/FileHelper.php")){
     $file_helper->RequireFile(null,$paths);
     //app start
     $GLOBALS["APP"] = new App();
-   
 }
 ?>
