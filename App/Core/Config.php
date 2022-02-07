@@ -15,7 +15,6 @@ class Config{
             echo $this->GetError(100);
             die();
         }else{
-            echo 'Connected';
         }
     }
     function GetConn(){

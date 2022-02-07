@@ -22,11 +22,9 @@ class Database{
         $this->ConfigInfo = $this->Get_Config_Info();
         if($this->Config($this->ConfigInfo)){
             if($this->CreateDatabase($this->ConfigInfo["database"])){
-                echo "\nDatabase created";
                 $database_name = $this->ConfigInfo["database"];
                 $sql = " USE $database_name";
                 if($this->DB_->query($sql) === TRUE){
-                    echo "\nDatabase selected";
                 };
             }else{
                 echo "\nerror when create database";
@@ -69,7 +67,6 @@ class Database{
                 $sql.=")";
                 if($havePrimary){
                     if($this->DB_->query($sql)){
-                        echo "\nCreate Table Success";
                     }else{
                         echo $this->DB_->error;
                     }

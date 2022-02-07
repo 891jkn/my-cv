@@ -1,18 +1,11 @@
 
 const body = document.getElementById("root");
+let loadingHtml = `
+<div class="spinner-border " id = "loading" style="position:fixed!important;left:50%;top:50%;z-index:100;" role="status">
+  <span class="sr-only" style="background-color:#4e54c8;"></span>
+</div>
+`;
 // function 
-function CreatePure(width,height,left){
-    return `<span class = "pure-box" style="width:${width}px;height:${height}px;position:absolute!important;left:${left}px!important;border-radius:${width * 0.2}px!important"></span>`
-}
-// var timeToCreate = 5000
-// setInterval(() => {
-//     if(body.firstChild !== null){body.removeChild(body.firstChild)}
-//     var offsetWidth = Math.floor(Math.random() * ((body.offsetWidth/5) - 10 ) + 10);
-//     var offsetLeft =  Math.floor(Math.random() * ((body.offsetHeight - 20) - 20) + 20);
-//     var new_pure =  CreatePure(offsetWidth,offsetWidth,offsetLeft);
-//     body.innerHTML+=new_pure;
-
-// }, timeToCreate);
 var bg_html = `  
     <div class="context" id="context">
         <h1>
@@ -33,22 +26,8 @@ var bg_html = `
             <li></li>
         </ul>
     </div >`
-var loadingHtml = `
-<div class="center">
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-<div class="wave"></div>
-</div>
-`;    
 body.innerHTML += bg_html;
-//getcontext
+//get context
 var context = document.querySelector("#context h1")
 
 async function typing(message){
@@ -76,16 +55,37 @@ async function typing(message){
 }
 
 // typing("Hello : Everyone ! Welcome to my CV website. \` If You Are Fresher or Junior , You Can Get Your CV Template Here.")
-typing("oke");
-
+typing("oke")
 function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
 
 function showloginScreen(){
     loginScreen = `
-        <div class = "login-container" id = "loginContainer">
-    
+        <div class = "login-container" id="loginContainer">
+            
+        <div class="night">
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+            <div class="shooting_star"></div>
+        </div>
             <span class= "btn-closed" onclick = "closeLogin()">&times;</span>
-            <form method="post" id="loginForm" class="login-form">
+            <form action = "#" method="post" id="loginForm" class="login-form">
                 <h2 class="sr-only text-center">Login Form</h2>
                 <span class = "text-danger" id ="validSummery"></span>
                 <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
@@ -93,7 +93,8 @@ function showloginScreen(){
                 <div class="form-group"><input class="form-control my-2" type="password" name="password" id = "password" placeholder="Password"></div>
                 <div class="form-group"><button class="btn btn-primary btn-block w-100" type="submit">Log In</button>
                 </div>
-                <a href="." class="forgot mt-2">Forgot your email or password?</>
+                <a href="." class="forgot mt-2">Forgot your email or password?</a>
+                <a href = "." onclick = "SignIn(event)" class = "forgot mt-2">Don't have an account ? Sign In</a>
             </form>
         </div>
     `;
@@ -101,35 +102,7 @@ function showloginScreen(){
     // login API
     var loginForm = document.getElementById("loginForm")
     loginForm.addEventListener("submit",function(e){
-
-        e.preventDefault();
-        let emailVal = $("#email").val();
-        let passwordVal = $("#password").val();
-
-        if(emailVal.trim()!== "" && passwordVal.trim() !==""){
-
-            // fetch api
-            var loginApiUrl = `my-cv/User/Login/${emailVal}/${passwordVal}`;
-            console.log(loginApiUrl)
-            fetch(loginApiUrl,{
-                method:'get',
-                headers:{
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            }).then(function(res){
-                if(res.ok){
-                    console.log(res.text())
-                }else{
-                    console.log("failed")
-                }
-            }).catch(function(err){
-                console.log(err)
-            }) 
-
-        }else{
-            document.getElementById("validSummery").innerHTML+="Email or Password can't be null";
-        }
+       Login(e.target,e)
     })
 }
 
@@ -137,4 +110,146 @@ function closeLogin(){
     loginScreen = document.getElementById("loginContainer")
     body.removeChild(loginScreen)
 }
+// login form
+function SignIn(event){
+    event.preventDefault();
+    var loginContainer = $("#loginContainer")
+    var loginForm = $("#loginContainer form")
+    loginForm.remove();
+    loginContainer.append(loadingHtml);
+    var SignInHtml = `
+    <form action = "#" method="post" id="signInForm" class="login-form" onsubmit = "SignInNewAccount(this,event)">
+        <h2 class="sr-only text-center">Sign Form</h2>
+        <span class = "text-danger" id ="validSummerySignIn"></span>
+        <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
+        <div class="form-group"><input class="form-control my-2" type="email" name="email" id = "email" placeholder="Email"></div>
+        <div class="form-group"><input class="form-control my-2" type="password" name="password" id = "password" placeholder="Password"></div>\
+        <div class="form-group"><input class="form-control my-2" type="password" name="password" id = "re-password" placeholder="Re - Password"></div>
+        <div class="form-group"><button class="btn btn-primary btn-block w-100" type="submit">Sign In</button>
+        </div>
+        <a href="." class="forgot mt-2">Forgot your email or password?</>
+        <a href = "#" onclick = "LoginForm(event)" class = "forgot mt-2">Have an account ? Login</a>
+    </form>
+    `;
+    setTimeout(function(){
+        loginContainer.append(SignInHtml);
+        $("#loading").remove();
+    },2000)
+}
+function LoginForm(event){
+    event.preventDefault();
+    var loginContainer = $("#loginContainer")
+    var loginForm = $("#loginContainer form")
+    loginForm.remove();
+    loginContainer.append(loadingHtml);
+    var SignInHtml = `
+    <form action = "#" method="post" id="loginForm" class="login-form" onsubmit = "Login(this,event)">
+        <h2 class="sr-only text-center">Login Form</h2>
+        <span class = "text-danger" id ="validSummery"></span>
+        <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
+        <div class="form-group"><input class="form-control my-2" type="email" name="email" id = "email" placeholder="Email"></div>
+        <div class="form-group"><input class="form-control my-2" type="password" name="password" id = "password" placeholder="Password"></div>
+        <div class="form-group"><button class="btn btn-primary btn-block w-100" type="submit">Log In</button>
+        </div>
+        <a href="." class="forgot mt-2">Forgot your email or password?</a>
+        <a href = "." onclick = "SignIn(event)" class = "forgot mt-2">Don't have an account ? Sign In</a>
+    </form>
+   `;
+    setTimeout(function(){
+        loginContainer.append(SignInHtml);
+        $("#loading").remove();
+    },2000)
+}
 
+function SignInNewAccount(self,event){
+    event.preventDefault();
+    if($("#email").val().trim()!=='' && $("#password").val().trim()!=='' && $('#re-password').val().trim()!==''){
+        if($("#password").val().trim()===$('#re-password').val().trim()){
+            var LoginContainer = $("#loginContainer")
+            LoginContainer.append(loadingHtml);
+            let apiUrl = `mycv/User/SignIn/${$("#email").val().trim()}/${$("#password").val().trim()}`;
+           
+            setTimeout(function(){
+                fetch(apiUrl,{
+                    method:'post',
+                    headers:{
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                }).then(function(res){
+                    if(res.ok){
+                        $("#loading").remove();
+                        return res.json()
+                    }
+                })
+                .then(function(data){
+                    if(data === true){
+                        AddAlert("SignIn Success","success");
+                    }else{
+                        document.getElementById('validSummerySignIn').innerHTML = data;
+                    }
+                })
+                .catch(function(err){
+                    console.log(err)
+                })
+            },2000)
+        }else{
+            document.getElementById('validSummerySignIn').innerHTML = "Password not match!";
+        }
+    }else{
+        document.getElementById('validSummerySignIn').innerHTML = "Can\'t null any field";
+    }
+}
+function Login(self,event){
+    event.preventDefault();
+    let emailVal = $("#email").val();
+    let passwordVal = $("#password").val();
+    var loginContainer = $("#loginContainer")
+    if(emailVal.trim()!== "" && passwordVal.trim() !==""){
+
+        // fetch api
+        var loginApiUrl = `mycv/User/Login/${emailVal}/${passwordVal}`;
+        loginContainer.append(loadingHtml)
+        setTimeout(function(){
+
+            fetch(loginApiUrl,{
+                method:'post',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }).then(function(res){
+                if(res.ok){
+                    return res.json();
+                }
+            }).then(function(data){
+
+                if(data){
+                    AddAlert('Login Success','success')
+                    $("#loading").remove();
+                }else{
+                   document.getElementById("validSummery").innerHTML="Email or Password incorrect";
+                   $("#loading").remove();
+                }
+            }).catch(function(err){
+                document.getElementById("validSummery").innerHTML=err;
+                $("#loading").remove();
+            }) 
+        },2000)
+    }else{
+        document.getElementById("validSummery").innerHTML="Email or Password can't be null";
+    }
+}
+function AddAlert(title,typeAlert){
+    const Toast = Swal.mixin({
+        toast: true,
+        showConfirmButton: false,
+        timer:2000,
+        timerProgressBar:true
+      })
+      Toast.fire({
+        icon: typeAlert,
+        title: title,
+        position:'top'
+      })
+}
