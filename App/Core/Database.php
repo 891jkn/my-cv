@@ -12,6 +12,7 @@ if(file_exists($arrayHelperPath) && file_exists($configPath)){
 class Database{
     
 
+    public $query ='';
     // get database info to config-server.json
     public $DB_;
 
@@ -33,7 +34,19 @@ class Database{
             echo "\nError when config db";
         }
     }
+    public function SetQuery($sql){
+        $this->query = $sql;
+    }
+    public function LoadAllRows(){
+        
+        if(!empty($this->query)){
+            $result = $this->DB_->query($this->query) or die($this->DB_->error);
+            return $result->fetch_assoc();
+        }else{
+            die("Query is null");
+        }
 
+    }
     public function GetDB(){
         if($this->DB_){
             return $this->DB_;
@@ -51,7 +64,37 @@ class Database{
             }
         }
     }
-
+    public function Insert($table,$data){
+        if(is_array($data)){
+            $sql = "INSERT INTO $table VALUES (";
+            foreach ($data as $item) {
+                $sql.= "'".$item ."'". ",";
+            }
+            $sql = trim(substr($sql,0,-1));
+            $sql.=")";
+            echo $sql."\n";
+            // if($this->DB_->query($sql)){
+            // }else{
+            //     echo $this->DB_->error;
+            // }
+        }
+    }
+    public function InsertAutoID($table,$data){
+        if(is_array($data)){
+            $count = 1;
+            $sql = "INSERT INTO $table VALUES (default,";
+            foreach ($data as $item) {
+                $sql.= "'".$item ."'". ",";
+            }
+            $sql = trim(substr($sql,0,-1));
+            $sql.=")";
+            echo $sql."\n";
+            if($this->DB_->query($sql)){
+            }else{
+                echo $this->DB_->error;
+            }
+        }
+    }
     public function CreateTable($table_name,$field){
         if(is_array($field)){
             if(ArrayHelper::isAssoc($field)){

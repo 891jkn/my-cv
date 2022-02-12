@@ -11,8 +11,11 @@ class UserController extends BaseController{
 
         $isUser = $this->model->CheckLogin($email,$password);
         if(!empty($isUser)){
-            if(!isset($_COOKIE["user_id"])){
-                setcookie("user_id",$isUser["id"],3600*24*30);
+            if(isset($_COOKIE["mycv_user_id"])){
+                setcookie("mycv_user_id",time() - 3600);
+                setcookie("mycv_user_id",$isUser["id"],time() + (84000*30),"/");
+            }else{
+                setcookie("mycv_user_id",$isUser["id"],time() + (84000*30),"/");
             }
             echo "true";
         }else{

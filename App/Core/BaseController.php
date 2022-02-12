@@ -2,10 +2,10 @@
 
 class BaseController{
     
-    public function View($view = null,$controller = null,$data = []){
+    public function View($view = null,$controller = null,$data = [],$has_layout = true){
         $file_helper = new FileHelper();    
         $view_path = " " ;
-        $layout = "MainLayout";
+        $layout = $has_layout?"MainLayout":null;
         if($view != null && $controller!=null){
             $view_path = $file_helper->GetViewFilePath($view,$controller);
         }else if($view != null && $controller == null){
@@ -14,10 +14,14 @@ class BaseController{
             $view_path = "./App/Views/Client/index.php";
         }
         if(file_exists($view_path)){
-            if(isset($data["layout"])){
-                $layout = $data["layout"];
+            if($has_layout){
+                if(isset($data["layout"])){
+                    $layout = $data["layout"];
+                }
+                require_once "./App/Views/Layout/".$layout.".php";
+            }else{
+                require_once $view_path;
             }
-            require_once "./App/Views/Layout/".$layout.".php";
         }else{
             echo "View is not found";
         }

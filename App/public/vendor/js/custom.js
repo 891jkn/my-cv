@@ -1,5 +1,6 @@
 
 const body = document.getElementById("root");
+const main = document.getElementById("root2")
 let loadingHtml = `
 <div class="spinner-border " id = "loading" style="position:fixed!important;left:50%;top:50%;z-index:100;" role="status">
   <span class="sr-only" style="background-color:#4e54c8;"></span>
@@ -54,10 +55,8 @@ async function typing(message){
     }
 }
 
-// typing("Hello : Everyone ! Welcome to my CV website. \` If You Are Fresher or Junior , You Can Get Your CV Template Here.")
-typing("oke")
+typing("Hello : Everyone ! Welcome to my CV website. \` If You Are Fresher or Junior , You Can Get Your CV Template Here.")
 function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
-
 function showloginScreen(){
     loginScreen = `
         <div class = "login-container" id="loginContainer">
@@ -185,6 +184,13 @@ function SignInNewAccount(self,event){
                 .then(function(data){
                     if(data === true){
                         AddAlert("SignIn Success","success");
+                        LoginAPI($("#email").val().trim(),$("#password").val().trim()).then(function(res){
+
+                            if(res==true){
+                                ClearScreen();
+                                window.location.href = "http://localhost:8080/mycv/Home/GetUser"
+                            }
+                        })
                     }else{
                         document.getElementById('validSummerySignIn').innerHTML = data;
                     }
@@ -207,39 +213,62 @@ function Login(self,event){
     var loginContainer = $("#loginContainer")
     if(emailVal.trim()!== "" && passwordVal.trim() !==""){
 
-        // fetch api
-        var loginApiUrl = `mycv/User/Login/${emailVal}/${passwordVal}`;
         loginContainer.append(loadingHtml)
+
         setTimeout(function(){
 
-            fetch(loginApiUrl,{
-                method:'post',
-                headers:{
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            }).then(function(res){
-                if(res.ok){
-                    return res.json();
-                }
-            }).then(function(data){
 
-                if(data){
-                    AddAlert('Login Success','success')
-                    $("#loading").remove();
-                }else{
-                   document.getElementById("validSummery").innerHTML="Email or Password incorrect";
-                   $("#loading").remove();
+            LoginAPI(emailVal,passwordVal).then((data)=>{
+                if(data === true){
+                    ClearScreen();
+                    window.location.href = "http://localhost:8080/mycv/Home/GetUser"
                 }
-            }).catch(function(err){
-                document.getElementById("validSummery").innerHTML=err;
-                $("#loading").remove();
-            }) 
+            })
+
         },2000)
     }else{
         document.getElementById("validSummery").innerHTML="Email or Password can't be null";
     }
 }
+
+function ClearScreen(){
+    body.remove();
+    document.body.style.background = "white";
+    document.body.style.overflow = "auto";
+    document.body.style.width = "100%";
+    document.body.style.height = "auto";
+    document.body.style.display = "block";
+}
+function LoginAPI(email,password){
+    var loginApiUrl = `mycv/User/Login/${email}/${password}`;
+    return fetch(loginApiUrl,{
+        method:'post',
+        headers:{
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }).then(function(res){
+        if(res.ok){
+            return res.json();
+        }
+    }).then(function(data){
+        if(data){
+            AddAlert('Login Success','success')
+            $("#loading").remove();
+            return true;
+        }else{
+            document.getElementById("validSummery").innerHTML="Email or Password incorrect";
+            $("#loading").remove();
+            return false;
+        }
+    }).catch(function(err){
+        document.getElementById("validSummery").innerHTML=err;
+        $("#loading").remove();
+        return false;
+    }) 
+}
+
+
 function AddAlert(title,typeAlert){
     const Toast = Swal.mixin({
         toast: true,
@@ -253,3 +282,30 @@ function AddAlert(title,typeAlert){
         position:'top'
       })
 }
+
+/// home 
+
+// function FetchHome(){
+//     main.innerHTML+=loadingHtml;
+//     // fetch
+//     setTimeout(() => {
+//         let homeAPIUrl = `mycv/Home/GetUser`;
+//         fetch(homeAPIUrl,{
+//             method:"post",
+//             headers:{
+//                 'Content-Type': 'application/json',
+//                 'Accept': 'application/json'
+//             }
+//         }).then((res)=>{
+//             $("#loading").remove()
+//             return res.text();
+//         }).then((data)=>{
+//             setTimeout(function(){
+
+//             },1000)
+//         }).catch((err)=>{
+//             console.log(err)
+//         })
+//     }, 2000);
+// }
+///form res info

@@ -10,7 +10,14 @@ html,body{
     --dark-mode-bg:black;
     --light-mode-bg:white;
 }
-
+.clear-screen{
+  overflow: auto;
+  background-color: white!important;
+  width: 100%;
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
 #root{
     overflow: hidden;
     background-color: #4e54c8;
@@ -715,4 +722,7 @@ body {
   top: 0;
   background-color: white;
   box-shadow: 1px 1px 10px black;
+}
+.clearScreen{
+  background-color: white!important;
 }
